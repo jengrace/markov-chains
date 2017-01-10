@@ -33,14 +33,14 @@ def make_chains(text_string):
     # your code goes here
     words = text_string.split()
 
-    for pos in range(len(words)):
+    for pos in range(len(words)-1):
         key = (words[pos], words[pos + 1])
+        value = None
 
-        if pos+1 == len(words)-1:
-            chains.setdefault(key, []).append(None)
-            break
+        if pos != len(words)-2:
+            value = words[pos + 2]
 
-        chains.setdefault(key, []).append(words[pos + 2])
+        chains.setdefault(key, []).append(value)
 
     print chains
 
