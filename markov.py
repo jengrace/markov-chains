@@ -1,4 +1,5 @@
 from random import choice
+import sys
 
 
 def open_and_read_file(file_path):
@@ -33,16 +34,16 @@ def make_chains(text_string):
     # your code goes here
     words = text_string.split()
 
-    for pos in range(len(words)-1):
+    for pos in range(len(words) - 1):
         key = (words[pos], words[pos + 1])
         value = None
 
-        if pos != len(words)-2:
+        if pos != len(words) - 2:
             value = words[pos + 2]
 
         chains.setdefault(key, []).append(value)
 
-    print chains
+    #print chains
 
     return chains
 
@@ -53,11 +54,36 @@ def make_text(chains):
     text = ""
 
     # your code goes here
+    end_var = 0
+    words = []
+    #this is a temp end point
+    while True:
+        key = choice(chains.keys())
+        while key[0] != key[0].title():
+            key = choice(chains.keys())
+        words.extend(key)
 
+        value = choice(chains[key])
+
+        while end_var < 50 and value[-1] not in ['.', '!', '?'] and value is not None:
+
+            value = choice(chains[key])
+
+            #here we want to be dealing with ends of sentences and making sure
+            #we start with beginnigs next time
+            if value is None:
+                break
+            #print value
+            words.append(value)
+            key = (key[1], value)
+            end_var += 1
+        break
+    text = ' '.join(words)
     return text
 
 
-input_path = "green-eggs.txt"
+input_path = sys.argv[1]
+#input_path = "green-eggs.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
