@@ -48,36 +48,78 @@ def make_chains(text_string):
     return chains
 
 
+def check_concat_length(text, sentence):
+    """checks the length if sentence is added and if <140 chars, adds it"""
+
+    temp_sentence = text + ' ' + ' '.join(sentence)
+    if len(temp_sentence) < 140:
+        return temp_sentence
+    else:
+        return None
+
+
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
     text = ""
 
     # your code goes here
-    end_var = 0
-    words = []
+    # end_var = 0
+    # words = []
+    sentence = []
+    # print chains
+
     #this is a temp end point
-    while True:
+    while len(text) < 140:
         key = choice(chains.keys())
+        # print key
+
         while key[0] != key[0].title():
             key = choice(chains.keys())
-        words.extend(key)
+            # print key
+        #is there a better way to do this?
+        sentence = [key[0], key[1]]
 
         value = choice(chains[key])
 
-        while end_var < 50 and value[-1] not in ['.', '!', '?'] and value is not None:
+        if value is None:
+            checked_length = check_concat_length(text, sentence)
+            if checked_length is None:
+                return text
+            else:
+                text = checked_length
+                continue
 
+        while True:
+            sentence.append(value)
+            if value[-1] in ['.', '!', '?']:
+                checked_length = check_concat_length(text, sentence)
+                if checked_length is None:
+                    return text
+                else:
+                    text = checked_length
+
+            key = (key[1], value)
             value = choice(chains[key])
 
-            #here we want to be dealing with ends of sentences and making sure
-            #we start with beginnigs next time
             if value is None:
                 break
-            #print value
-            words.append(value)
-            key = (key[1], value)
-            end_var += 1
-        break
+
+        # while end_var < 50 and value[-1] not in ['.', '!', '?']:
+        #     if value[-1] in ['.', '!', '?']:
+        #         sentence.append(value)
+
+        #     value = choice(chains[key])
+
+        #     #here we want to be dealing with ends of sentences and making sure
+        #     #we start with beginnigs next time
+
+        #     #print value
+        #     words.append(value)
+        #     key = (key[1], value)
+        #     end_var += 1
+            
+        #break
     text = ' '.join(words)
     return text
 
